@@ -103,8 +103,8 @@
                 var(--wheel-color-1) 0deg 72deg,
                 var(--wheel-color-2) 72deg 144deg,
                 var(--wheel-color-1) 144deg 216deg,
-                var(--wheel-color-2) 216deg 288deg,
-                #7209b7 288deg 360deg /* Cor roxa premium pro prêmio principal! */
+                #7209b7 216deg 288deg, /* Prêmio principal agora é o Selinho! */
+                var(--wheel-color-2) 288deg 360deg 
             );
         }
 
@@ -359,7 +359,7 @@
                 <div class="slice" style="transform: translate(-50%, -50%) rotate(108deg) translateY(-105px);">Segredo</div>
                 <div class="slice" style="transform: translate(-50%, -50%) rotate(180deg) translateY(-105px);">Meu Insta</div>
                 <div class="slice" style="transform: translate(-50%, -50%) rotate(252deg) translateY(-105px);">Selinho</div>
-                <div class="slice" style="transform: translate(-50%, -50%) rotate(324deg) translateY(-105px);">Desafio</div>
+                <div class="slice" style="transform: translate(-50%, -50%) rotate(324deg) translateY(-105px);">Surpresa</div>
             </div>
             <div class="center-circle">💖</div>
         </div>
@@ -416,18 +416,18 @@
             if (startSpinCount === 0) {
                 // Rodada 1: Segredo
                 targetAngle = 360 - 108; 
-                resultTitle = "UM SEGREDO";
-                resultText = "Conte um segredo sobre você. Algo que quase ninguém sabe, ou que você não contaria no primeiro encontro. 😉";
+                resultTitle = "UM SEGREDO 🤫";
+                resultText = "Conte um segredo sobre você. Algo que quase ninguém sabe, ou que você não contaria no primeiro encontro.";
             } else if (startSpinCount === 1) {
                 // Rodada 2: 1 Drink
                 targetAngle = 360 - 36;
                 resultTitle = "1 DRINK 🍹";
                 resultText = "Próxima rodada é por minha conta! Eu já sei o que vou pedir, o que você vai querer?";
             } else {
-                // Rodada 3: Desafio final
-                targetAngle = 360 - 324;
-                resultTitle = "O DESAFIO 🔥";
-                resultText = "O desafio é: você consegue me olhar nos olhos por 10 segundos sem rir e sem sentir vontade de me beijar?";
+                // Rodada 3: Selinho no final
+                targetAngle = 360 - 252;
+                resultTitle = "UM SELINHO 😘";
+                resultText = "A roleta nunca falha! Um selinho para selar a noite e a sorte... E de quebra, tem uma surpresa pra você depois disso.";
             }
 
             // Variação para cair em pontos diferentes (+- 20 graus)
@@ -452,7 +452,7 @@
             
             // Na terceira vez (antes de fechar o modal e somar pra 3), startSpinCount = 2
             if(startSpinCount === 2) {
-                document.getElementById('closeBtn').innerText = "Eu aceito o desafio";
+                document.getElementById('closeBtn').innerText = "Combinado!";
                 document.getElementById('closeBtn').style.background = "var(--accent)";
                 document.getElementById('closeBtn').style.color = "white";
             } else {
