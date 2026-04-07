@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roleta do Destino 😉</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0d0f14;
+            --text-light: #f5f5f5;
+            --accent: #ff2a5f;
+            --accent-glow: rgba(255, 42, 95, 0.6);
+            --wheel-color-1: #ff2a5f;
+            --wheel-color-2: #212436;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            text-align: center; 
+            background: radial-gradient(circle at center, #1a1d29 0%, var(--bg-dark) 100%); 
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            z-index: 10;
+            margin-top: 20px;
+        }
+
+        h1 { 
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.4rem;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            font-weight: 800;
+            background: -webkit-linear-gradient(45deg, #fff, #ffb5a7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 5px 20px rgba(255, 255, 255, 0.05);
+        }
+
+        p {
+            color: #b0b5c9;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        /* ROLETA CSS */
+        .roulette-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin: 0 auto 50px;
+            border-radius: 50%;
+            padding: 10px;
+            background: linear-gradient(135deg, rgba(255,42,95,0.4), rgba(33,36,54,0.8));
+            box-shadow: 0 0 40px rgba(255,42,95,0.2), inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0; 
+            height: 0; 
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 35px solid #fff;
+            z-index: 20;
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.8));
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid var(--bg-dark);
+            position: relative;
+            overflow: hidden;
+            transition: transform 4.5s cubic-bezier(0.1, 0.8, 0.1, 1);
+            box-shadow: 0 0 15px rgba(0,0,0,0.8);
+            transform: rotate(-36deg); /* Inicia apontado para o meio do primeiro setor */
+        }
+        
+        .wheel-bg {
+            position: absolute; 
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--wheel-color-1) 0deg 72deg,
+                var(--wheel-color-2) 72deg 144deg,
+                var(--wheel-color-1) 144deg 216deg,
+                var(--wheel-color-2) 216deg 288deg,
+                #7209b7 288deg 360deg /* Cor roxa premium pro prêmio principal! */
+            );
+        }
+
+        .slice {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform-origin: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            white-space: nowrap;
+        }
+
+        .center-circle {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 65px; height: 65px;
+            background: var(--bg-dark);
+            border-radius: 50%;
+            z-index: 15;
+            border: 4px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            color: white;
+        }
+
+        .counter {
+            color: #ffb5a7;
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+            text-shadow: 0 0 10px rgba(255, 42, 95, 0.4);
+        }
+
+        /* BUTTONS */
+        .btn-spin {
+            display: inline-block;
+            padding: 16px 45px;
+            background: linear-gradient(45deg, #1a1c29, #2a2d3e);
+            color: white;
+            border: 2px solid var(--accent);
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            width: 100%;
+            max-width: 350px;
+            margin-bottom: 20px;
+        }
+        .btn-spin:hover {
+            transform: translateY(-3px);
+            background: var(--accent);
+            box-shadow: 0 10px 30px var(--accent-glow);
+        }
+        .btn-spin:active {
+            transform: translateY(1px);
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(13, 15, 20, 0.9);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            background: linear-gradient(145deg, #1f2233, #151724);
+            padding: 40px 30px;
+            border-radius: 24px;
+            max-width: 90%;
+            width: 380px;
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+        .modal-title {
+            color: var(--accent);
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .modal-text {
+            font-size: 1.15rem;
+            color: #d1d5db;
+            line-height: 1.7;
+            margin-bottom: 30px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .btn-close {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            padding: 14px 35px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-family: 'Poppins', sans-serif;
+            width: 100%;
+        }
+        .btn-close:hover {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .hidden { display: none !important; }
+
+        /* CARTA BÔNUS */
+        .card-scene {
+            width: 300px;
+            height: 400px;
+            perspective: 1000px;
+            margin: 30px auto;
+            display: none;
+            animation: fadeIn 1s ease-in;
+        }
+        .card-scene.visible { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card {
+            width: 100%; height: 100%;
+            position: relative;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        .card.is-flipped { transform: rotateY(180deg); }
+        .card__face {
+            position: absolute;
+            width: 100%; height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            border: 2px solid rgba(255,255,255,0.05);
+            padding: 20px;
+        }
+        .card__face--front {
+            background: linear-gradient(135deg, #1f2233, #151724);
+        }
+        .card__face--front::after {
+            content: "🎁";
+            font-size: 80px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+        .card__face--front h3 {
+            color: var(--accent);
+            font-size: 1.5rem;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .card__face--front p {
+            color: #8a8d9e;
+            margin-bottom: 0;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .card__face--back {
+            background: linear-gradient(135deg, #ff2a5f, #7209b7);
+            transform: rotateY(180deg);
+        }
+        .card__face--back h3 {
+            font-size: 1.6rem;
+            color: white;
+            margin-bottom: 15px;
+            font-family: 'Montserrat', sans-serif;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .card__face--back p {
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .btn-ig {
+            padding: 14px 30px;
+            background: white;
+            color: #7209b7;
+            text-decoration: none;
+            font-weight: 800;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+        }
+        .btn-ig:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Eu não costumo perder muito tempo com rodeios. <br>
+            Te achei incrível e o meu único plano pra agora 
+            é descobrir se o seu beijo é tão bom quanto a sua energia.</h1>
+        <p id="subtitle">Minha maior habilidade é a persistência: eu não paro até atingir o objetivo.
+             E o meu objetivo agora está bem na minha frente, me olhando desse jeito.</p>
+        
+        <div class="roulette-container">
+            <div class="pointer"></div>
+            <div class="wheel" id="wheel">
+                <div class="wheel-bg"></div>
+                <!-- Posições (72 graus por setor): 
+                     0 -> 36deg, 1 -> 108deg, 2 -> 180deg, 3 -> 252deg, 4 -> 324deg -->
+                <div class="slice" style="transform: translate(-50%, -50%) rotate(36deg) translateY(-105px);">1 Drink</div>
+                <div class="slice" style="transform: translate(-50%, -50%) rotate(108deg) translateY(-105px);">Segredo</div>
+                <div class="slice" style="transform: translate(-50%, -50%) rotate(180deg) translateY(-105px);">Meu Insta</div>
+                <div class="slice" style="transform: translate(-50%, -50%) rotate(252deg) translateY(-105px);">Selinho</div>
+                <div class="slice" style="transform: translate(-50%, -50%) rotate(324deg) translateY(-105px);">Desafio</div>
+            </div>
+            <div class="center-circle">💖</div>
+        </div>
+
+        <p class="counter" id="triesCounter">Tentativas restantes: 3</p>
+        <button class="btn-spin" id="spinBtn" onclick="spinWheel()">Girar a Roleta</button>
+
+        <!-- CARTA BÔNUS -->
+        <div class="card-scene" id="bonusCard" onclick="flipCard()">
+            <div class="card" id="cardInner">
+                <div class="card__face card__face--front">
+                    <h3>Carta Bônus</h3>
+                    <p>Toque para virar</p>
+                </div>
+                <div class="card__face card__face--back">
+                    <h3>Passe VIP 🎫</h3>
+                    <p>Você ganhou acesso direto ao meu Instagram!</p>
+                    <!-- Coloque o seu instagram real aqui -->
+                    <a href="https://www.instagram.com/deividmak" target="_blank" class="btn-ig">Resgatar Prêmio</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <h2 class="modal-title" id="modal-title">...</h2>
+            <p class="modal-text" id="modal-text">...</p>
+            <button class="btn-close" id="closeBtn" onclick="closeModal()">Continuar</button>
+        </div>
+    </div>
+
+    <script>
+        let startSpinCount = 0;
+        let currentRotation = -36; /* Começa alinhado junto com o CSS */
+        let isSpinning = false;
+
+        function spinWheel() {
+            if (isSpinning) return;
+            isSpinning = true;
+
+            const wheel = document.getElementById('wheel');
+            let targetAngle = 0;
+            let resultTitle = "";
+            let resultText = "";
+
+            // Atualiza visualmente o contador logo ao clicar
+            let remaining = 2 - startSpinCount; 
+            if (remaining >= 0) {
+                document.getElementById('triesCounter').innerText = "Tentativas restantes: " + remaining;
+            }
+
+            if (startSpinCount === 0) {
+                // Rodada 1: Segredo
+                targetAngle = 360 - 108; 
+                resultTitle = "UM SEGREDO";
+                resultText = "Conte um segredo sobre você. Algo que quase ninguém sabe, ou que você não contaria no primeiro encontro. 😉";
+            } else if (startSpinCount === 1) {
+                // Rodada 2: 1 Drink
+                targetAngle = 360 - 36;
+                resultTitle = "1 DRINK 🍹";
+                resultText = "Próxima rodada é por minha conta! Eu já sei o que vou pedir, o que você vai querer?";
+            } else {
+                // Rodada 3: Desafio final
+                targetAngle = 360 - 324;
+                resultTitle = "O DESAFIO 🔥";
+                resultText = "O desafio é: você consegue me olhar nos olhos por 10 segundos sem rir e sem sentir vontade de me beijar?";
+            }
+
+            // Variação para cair em pontos diferentes (+- 20 graus)
+            let randomOffset = Math.floor(Math.random() * 40) - 20; 
+            
+            // Calculo da rotação: 5 voltas de base
+            let totalRotation = (Math.floor(currentRotation / 360) + 5) * 360 + targetAngle + randomOffset;
+            
+            wheel.style.transform = `rotate(${totalRotation}deg)`;
+            currentRotation = totalRotation;
+
+            setTimeout(() => {
+                showModal(resultTitle, resultText);
+                startSpinCount++;
+                isSpinning = false;
+            }, 4600); 
+        }
+
+        function showModal(title, text) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-text').innerText = text;
+            
+            // Na terceira vez (antes de fechar o modal e somar pra 3), startSpinCount = 2
+            if(startSpinCount === 2) {
+                document.getElementById('closeBtn').innerText = "Eu aceito o desafio";
+                document.getElementById('closeBtn').style.background = "var(--accent)";
+                document.getElementById('closeBtn').style.color = "white";
+            } else {
+                document.getElementById('closeBtn').innerText = "Continuar";
+            }
+            
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            
+            // Ao fechar Rodada 1
+            if (startSpinCount === 1) {
+                const btn = document.getElementById('spinBtn');
+                btn.innerHTML = "Girar Novamente";
+            } 
+            // Ao fechar Rodada 2
+            else if (startSpinCount === 2) {
+                const btn = document.getElementById('spinBtn');
+                btn.innerHTML = "Última chance: Sorte Grande!";
+                btn.style.background = "linear-gradient(45deg, #ff2a5f, #ff758c)";
+                btn.style.border = "none";
+                btn.style.color = "white";
+                document.getElementById('triesCounter').classList.add('hidden'); // Oculta na ultima tentativa
+            } 
+            // Ao fechar Rodada 3 (Aceitou Desafio)
+            else if (startSpinCount === 3) {
+                // Mostra Carta Bônus
+                document.querySelector('h1').innerHTML = "E tem mais uma surpresa...";
+                document.getElementById('subtitle').classList.add('hidden');
+                document.querySelector('.roulette-container').classList.add('hidden');
+                document.getElementById('spinBtn').classList.add('hidden');
+                document.getElementById('triesCounter').classList.add('hidden');
+                
+                document.getElementById('bonusCard').classList.add('visible');
+            }
+        }
+
+        function flipCard() {
+            document.getElementById('cardInner').classList.toggle('is-flipped');
+        }
+    </script>
+</body>
+</html>
